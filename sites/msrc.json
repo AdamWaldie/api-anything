@@ -1,0 +1,153 @@
+{
+  "name": "msrc",
+  "displayName": "MSRC Security Update Guide",
+  "baseUrl": "https://msrc.microsoft.com",
+  "description": "Microsoft Security Response Center Security Update Guide: affected products, severity, CVSS and KBs for a CVE, from the JSON the update guide page loads. Public, logged out.",
+  "operations": [
+    {
+      "name": "getCve",
+      "description": "One CVE from the MSRC Security Update Guide (msrc.microsoft.com/update-guide/vulnerability/{cve}), one row per affected product: severity, impact, baseScore, temporalScore, vectorString, cweList, kbArticles, fixed build, cpe, releaseDate.",
+      "request": {
+        "method": "GET",
+        "url": "https://api.msrc.microsoft.com/sug/v2.0/en-US/affectedProduct?$orderBy=releaseDate%20desc&$filter=cveNumber%20eq%20%27CVE-2023-23397%27",
+        "headers": {
+          "accept": "application/json, text/plain, */*",
+          "accept-language": "en-US,en;q=0.9",
+          "cache-control": "no-cache",
+          "origin": "https://msrc.microsoft.com",
+          "pragma": "no-cache",
+          "priority": "u=1, i",
+          "referer": "https://msrc.microsoft.com/",
+          "request-id": "",
+          "sec-ch-ua": "\"Chromium\";v=\"153\", \"Not_A Brand\";v=\"8\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Linux\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-site",
+          "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+          "x-request-id": ""
+        }
+      },
+      "slots": [
+        {
+          "param": "cve",
+          "at": [
+            "query:$filter"
+          ],
+          "template": "cveNumber eq '{cve}'"
+        },
+        {
+          "at": [
+            "header:request-id"
+          ],
+          "gen": "uuid"
+        },
+        {
+          "at": [
+            "header:x-request-id"
+          ],
+          "gen": "uuid"
+        }
+      ],
+      "volatile": [],
+      "trigger": {
+        "url": "https://msrc.microsoft.com/update-guide/vulnerability/{cve}"
+      },
+      "match": {
+        "method": "GET",
+        "host": "api.msrc.microsoft.com",
+        "path": "/sug/v2.0/en-US/affectedProduct"
+      },
+      "response": {
+        "format": "json",
+        "contentType": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8",
+        "extract": "value",
+        "shape": {
+          "@odata.context": "string",
+          "@odata.count": "number",
+          "value": "array",
+          "value[]": "object",
+          "value[].id": "string",
+          "value[].releaseDate": "string",
+          "value[].releaseNumber": "string",
+          "value[].product": "string",
+          "value[].productId": "number",
+          "value[].productFamily": "string",
+          "value[].productFamilyId": "number",
+          "value[].platformId": "number",
+          "value[].cveNumber": "string",
+          "value[].severityId": "number",
+          "value[].severity": "string",
+          "value[].impactId": "number",
+          "value[].impact": "string",
+          "value[].issuingCna": "string",
+          "value[].issuingCnaId": "number",
+          "value[].baseProductVersion": "string",
+          "value[].baseProductName": "string",
+          "value[].cpe": "string",
+          "value[].customerActionRequired": "boolean",
+          "value[].customerActionRequiredId": "number",
+          "value[].cweList": "array",
+          "value[].cweList[]": "string",
+          "value[].cweDetailsListForSearch": "array",
+          "value[].architecture": "string",
+          "value[].architectureId": "number",
+          "value[].initialReleaseDate": "string",
+          "value[].baseScore": "string",
+          "value[].temporalScore": "string",
+          "value[].vectorString": "string",
+          "value[].isMariner": "boolean",
+          "value[].cweDetailsList": "array",
+          "value[].cweDetailsList[]": "object",
+          "value[].cweDetailsList[].keys": "array",
+          "value[].cweDetailsList[].keys[]": "string",
+          "value[].cweDetailsList[].values": "array",
+          "value[].cweDetailsList[].values[]": "string",
+          "value[].kbArticles": "array",
+          "value[].kbArticles[]": "object",
+          "value[].kbArticles[].articleName": "string",
+          "value[].kbArticles[].articleUrl": "string",
+          "value[].kbArticles[].downloadName": "string",
+          "value[].kbArticles[].downloadUrl": "string",
+          "value[].kbArticles[].knownIssuesName": "null",
+          "value[].kbArticles[].knownIssuesUrl": "null",
+          "value[].kbArticles[].supercedence": "string",
+          "value[].kbArticles[].rebootRequired": "string",
+          "value[].kbArticles[].ordinal": "number",
+          "value[].kbArticles[].fixedBuildNumber": "string",
+          "value[].kbArticles[].affectedBinaries": "array"
+        }
+      },
+      "params": [
+        {
+          "name": "cve",
+          "type": "string",
+          "required": true,
+          "example": "CVE-2023-23397",
+          "description": "CVE id as MSRC lists it, e.g. CVE-2024-38063."
+        }
+      ],
+      "readOnly": true,
+      "minTier": 1,
+      "learnedLoggedIn": false,
+      "learnedAt": "2026-11-10T12:10:43.464Z",
+      "checks": [
+        {
+          "args": {
+            "cve": "CVE-2024-21413"
+          },
+          "expect": "result",
+          "purpose": "Outlook RCE with Office and Microsoft 365 rows"
+        },
+        {
+          "args": {
+            "cve": "CVE-2024-38063"
+          },
+          "expect": "result",
+          "purpose": "Windows TCP/IP RCE across many Windows builds"
+        }
+      ]
+    }
+  ]
+}
